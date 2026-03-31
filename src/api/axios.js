@@ -1,7 +1,10 @@
 import axios from "axios";
 
+// Use environment variable for production, localhost for development
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const API = axios.create({
-  baseURL: "http://localhost:3000", // 👈 yaha local backend
+  baseURL: API_URL,
   withCredentials: true,
 });
 
@@ -25,6 +28,7 @@ API.interceptors.response.use(
       const url = error.config?.url || "";
       if (!url.includes("/api/auth/me")) {
         localStorage.removeItem("token");
+        window.location.href = "/login";
       }
     }
     return Promise.reject(error);
